@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-
+      "magento/module-directory": "^100.3"
   },
   "type": "magento2-module",
   "license": [
