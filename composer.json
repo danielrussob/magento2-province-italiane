@@ -1,18 +1,22 @@
 {
-  "name": "vmasciotta/magento2-province-italiane",
+  "name": "dnafactory/module-province-italiane",
   "description": "Modulo per l'installazione delle province italiane in Magento2",
   "authors": [
     {
       "name": "Valerio Masciotta",
       "email": "sviluppo@valeriomasciotta.it",
       "homepage": "http://www.valeriomasciotta.it"
+    },
+    {
+       "name": "Daniel Russo",
+       "email": "daniel@dnafactory.it",
+       "homepage": "https://www.dnafactory.it"
     }
   ],
   "require": {
-    "magento/module-directory": "100.0 - 100.2"
+
   },
   "type": "magento2-module",
-  "version": "1.1.0",
   "license": [
     "OSL-3.0",
     "AFL-3.0"

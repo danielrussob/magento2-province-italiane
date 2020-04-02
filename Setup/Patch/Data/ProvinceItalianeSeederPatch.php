@@ -1,42 +1,37 @@
 <?php
-namespace Vmasciotta\ProvinceItaliane\Setup;
 
-use Magento\Directory\Helper\Data;
-use Magento\Framework\Setup\InstallDataInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
+namespace Vmasciotta\ProvinceItaliane\Setup\Patch\Data;
+
+use Magento\Framework\Setup\Patch\DataPatchInterface;
+
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Directory\Helper\Data;
 
-/**
- * @codeCoverageIgnore
- */
-class InstallData implements InstallDataInterface
+class ProvinceItalianeSeederPatch implements DataPatchInterface
 {
-    /**
-     * Directory data
-     *
-     * @var Data
-     */
-    private $directoryData;
+    protected $moduleDataSetup;
+    protected $directoryData;
 
-    /**
-     * Init
-     *
-     * @param Data $directoryData
-     */
-    public function __construct(Data $directoryData)
+    public function __construct(ModuleDataSetupInterface $moduleDataSetup, Data $directoryData)
     {
+        $this->moduleDataSetup = $moduleDataSetup;
         $this->directoryData = $directoryData;
     }
 
-    /**
-     * Installs data for a module
-     *
-     * @param ModuleDataSetupInterface $setup
-     * @param ModuleContextInterface $context
-     * @return void
-     */
-    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
+    public static function getDependencies()
     {
+        return [];
+    }
+
+    public function getAliases()
+    {
+        return [];
+    }
+
+    public function apply()
+    {
+        $this->moduleDataSetup->getConnection()->startSetup();
+
         $province = [
             'AG' => 'Agrigento',
             'AL' => 'Alessandria',
@@ -128,6 +123,7 @@ class InstallData implements InstallDataInterface
             'SI' => 'Siena',
             'SR' => 'Siracusa',
             'SO' => 'Sondrio',
+            'SU' => 'Sud Sardegna',
             'TA' => 'Taranto',
             'TE' => 'Teramo',
             'TR' => 'Terni',
@@ -149,14 +145,19 @@ class InstallData implements InstallDataInterface
 
         foreach ($province as $code => $name) {
             $bind = ['country_id'   => 'IT', 'code' => $code, 'default_name' => $name];
-            $setup->getConnection()->insert($setup->getTable('directory_country_region'), $bind);
-            $regionId = $setup->getConnection()->lastInsertId($setup->getTable('directory_country_region'));
+
+            $this->moduleDataSetup->getConnection()
+                ->insert($this->moduleDataSetup->getTable('directory_country_region'), $bind);
+
+            $regionId = $this->moduleDataSetup->getConnection()
+                ->lastInsertId($this->moduleDataSetup->getTable('directory_country_region'));
 
 
             $bind = ['locale'=> 'it_IT', 'region_id' => $regionId, 'name'=> $name];
-            $setup->getConnection()->insert($setup->getTable('directory_country_region_name'), $bind);
+            $this->moduleDataSetup->getConnection()
+                ->insert($this->moduleDataSetup->getTable('directory_country_region_name'), $bind);
         }
 
-        $setup->endSetup();
+        $this->moduleDataSetup->getConnection()->endSetup();
     }
 }
