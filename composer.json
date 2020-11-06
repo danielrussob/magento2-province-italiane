@@ -1,6 +1,7 @@
 {
   "name": "dnafactory/module-province-italiane",
   "description": "Modulo per l'installazione delle province italiane in Magento2",
+  "keywords": ["Magento2"],
   "authors": [
     {
       "name": "Valerio Masciotta",
